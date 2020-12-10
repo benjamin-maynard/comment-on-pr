@@ -60,7 +60,7 @@ def load_template(filename):
     template : str
 
     """
-    template_path = os.path.join('.github/workflows', filename)
+    template_path = filename
     with open(template_path, 'r') as f:
         return f.read()
 
@@ -69,20 +69,20 @@ def main():
     # search a pull request that triggered this action
     gh = Github(os.getenv('GITHUB_TOKEN'))
     workflow_id = os.getenv('GITHUB_RUN_ID')
-    event = read_json(os.getenv('GITHUB_EVENT_PATH'))
-    branch_label = event['pull_request']['head']['label']  # author:branch
-    branch_name = branch_label.split(':')[-1]
-    repo = gh.get_repo(event['repository']['full_name'])
-    prs = repo.get_pulls(state='open', sort='created', head=branch_label)
-    pr = prs[0]
+#     event = read_json(os.getenv('GITHUB_EVENT_PATH'))
+# #     branch_label = event['pull_request']['head']['label']  # author:branch
+# #     branch_name = branch_label.split(':')[-1]
+#     repo = gh.get_repo(event['repository']['full_name'])
+#     prs = repo.get_pulls(state='open', sort='created', head=branch_label)
+#     pr = prs[0]
 
     # load template
     template = load_template(get_actions_input('filename'))
 
     # build a comment
     pr_info = {
-        'pull_id': pr.number,
-        'branch_name': branch_name,
+#         'pull_id': pr.number,
+#         'branch_name': branch_name,
         'workflow_id': workflow_id
     }
     new_comment = template.format(**pr_info)
